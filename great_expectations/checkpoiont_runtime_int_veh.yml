@@ -1,0 +1,41 @@
+name: checkpoiont_runtime_int_veh
+config_version: 1.0
+template_name:
+module_name: great_expectations.checkpoint
+class_name: Checkpoint
+run_name_template: '%Y-%m-%d-runtime-int-veh'
+expectation_suite_name:
+batch_request: {}
+action_list:
+  - name: store_validation_result
+    action:
+      class_name: StoreValidationResultAction
+  - name: store_evaluation_params
+    action:
+      class_name: StoreEvaluationParametersAction
+  - name: update_data_docs
+    action:
+      class_name: UpdateDataDocsAction
+  - name: send_slack_notification_on_validation_result
+    action:
+      class_name: SlackNotificationAction
+      slack_webhook: ${validation_notification_slack_webhook}
+      notify_on: all  # possible values: "all", "failure", "success"
+      show_failed_expectations: true
+      renderer:
+        module_name: great_expectations.render.renderer.slack_renderer
+        class_name: SlackRenderer
+evaluation_parameters: {}
+runtime_configuration: {}
+validations:
+  - name: int-veh runtime check
+    batch_request:
+      datasource_name: spark_runtime
+      data_connector_name: my_runtime_data_connector
+      data_asset_name: int_veh
+      batch_identifiers:
+        default_identifier_name: example_batch_identifier
+    expectation_suite_name: suite_gdw_int_veh
+profilers: []
+ge_cloud_id:
+expectation_suite_ge_cloud_id:
